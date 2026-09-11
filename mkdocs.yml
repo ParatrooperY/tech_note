@@ -1,0 +1,14 @@
+site_name: 我的笔记
+
+theme:
+  name: material
+  language: zh
+
+nav:
+  - 首页: index.md
+  - 网站部署:
+      - Docker和Nginx网站部署: docker、nginx、http网站部署.md
+  - 开源项目:
+      - Github开源项目注意点: 开源项目需要考虑的问题.md
+  - 计网知识点:
+      - HTTP、TCP、UDP、数据链路: 计算机网络.md
