@@ -20,10 +20,10 @@
 
 | 命令 | 干什么 |
 |---|---|
-| `docker compose up -d` | 启动所有服务（后台） |
+| `docker compose up -d` | 后台启动所有服务 |
 | `docker compose ps` | 看哪些容器在跑 |
-| `docker compose logs server` | 看某个容器的日志（server 名换成你的服务名） |
-| `docker compose restart server` | 重启某个服务 |
+| `docker compose logs 服务名` | 看某个容器的日志 |
+| `docker compose restart 服务名` | 重启某个服务 |
 | `docker compose down` | 停止所有容器（数据保留） |
 | `docker images` | 看有哪些镜像 |
 | `docker ps` | 看所有运行中的容器 |
