@@ -1,8 +1,36 @@
 # Docker 与 Nginx 网站部署笔记
 
-## 1. Compose.yaml 与端口映射
+## 1. Docker、Compose.yaml 与端口映射
 
-`compose.yaml` 是容器编排配置文件，用来描述需要启动哪些服务以及运行参数。每个 Docker 容器都有**独立的 "虚拟网卡" 和端口表**，相当于一台隔离的小机器。
+### Docker 是什么
+
+**Docker把应用程序和它依赖的所有环境（Java、数据库、配置）打包成一个"标准集装箱"，到任何机器上都能原样跑。
+解决的问题：换台机器部署得重新装 Java、装 PostgreSQL、配环境变量……现在全部打包成镜像，到都能运行。
+
+| 概念 | 是什么 | 例子 |
+|---|---|---|
+| **镜像（Image）** | 只读的模板，相当于"安装包" | `postgres:15-bookworm`、`eclipse-temurin:17-jre-alpine` |
+| **容器（Container）** | 镜像跑起来的实例，相当于"正在运行的程序" | `srams-postgres-1`、`srams-server-1` |
+| **Dockerfile** | 怎么制作镜像的说明书 | 目前采用运行官方JRE镜像+挂载jar包跑后端的方案，不需要这个 |
+| **Compose.yaml** | 是容器编排配置文件，用来描述需要启动哪些服务以及运行参数 | 项目的`compose.yaml` |
+| **Volume** | 数据持久化，容器删了数据还在 | `postgres-data`、`minio-data` |
+| **网络** | 容器之间互相通信的"内网" | 通过容器名 `postgres`、`server` 互相访问 |
+
+## 常用命令速查
+
+| 命令 | 干什么 |
+|---|---|
+| `docker compose up -d` | 启动所有服务（后台） |
+| `docker compose ps` | 看哪些容器在跑 |
+| `docker compose logs server` | 看某个容器的日志（server 名换成你的服务名） |
+| `docker compose restart server` | 重启某个服务 |
+| `docker compose down` | 停止所有容器（数据保留） |
+| `docker images` | 看有哪些镜像 |
+| `docker ps` | 看所有运行中的容器 |
+
+### Docker容器间的通信
+
+每个 Docker 容器都有**独立的 "虚拟网卡" 和端口表**，相当于一台隔离的小机器。
 
 本机默认看不见容器里开了什么端口，除非用 compose.yaml 里的`ports:`做"端口映射"，把宿主机的某个端口和容器端口接通：
 
