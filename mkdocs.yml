@@ -8,7 +8,7 @@ nav:
   - 首页: index.md
   - 网站部署:
       - Docker和Nginx网站部署: docker、nginx、http网站部署.md
-      - GitHub网站搭建.md
+      - GitHub网站搭建: GitHub网站搭建流程.md
   - 开源项目:
       - Github开源项目注意点: 开源项目需要考虑的问题.md
   - 计网知识点:
