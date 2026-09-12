@@ -1,6 +1,6 @@
 # GitHub Pages 网站部署流程总结
 
-## 一、部署步骤
+## 部署步骤
 
 ### 1. 新建GitHub仓库，上传本地项目
 
@@ -84,7 +84,7 @@ git push origin main
 
 推送后 Actions 自动运行部署流程，成功后网站会自动更新，不需要手动执行部署命令。
 
-### SpaceShip 购买域名，添加 DNS 解析记录，等待生效
+5. SpaceShip 购买域名，添加 DNS 解析记录，等待生效（可选）
 
 | 主机（全称）                                           | 类型  | 值（解析到目标 IP ）     |
 | ------------------------------------------------------ | ----- | ------------------------ |
@@ -134,9 +134,7 @@ git push origin main
    
    ```
 
-4. Custom domain 填入对应子域名，保存
-
-5. 成功访问后勾选 `Enforce HTTPS`（GitHub会自动申请Let’s Encrypt证书，就绪后可勾选）
+4. Custom domain 填入对应子域名，保存。成功访问后勾选 `Enforce HTTPS`，GitHub会自动申请Let’s Encrypt证书，就绪后可勾选（可选）
 
 ### 3. GitHub Pages 部署过程出现的问题
 

@@ -8,8 +8,11 @@ nav:
   - 首页: index.md
   - 网站部署:
       - Docker和Nginx网站部署: docker、nginx、http网站部署.md
-      - GitHub网站搭建: GitHub网站搭建流程.md
+      - GitHub网站搭建流程: GitHub网站搭建流程.md
+  - Git版本管理：
+      - Git版本管理创建流程: Git初始化与项目创建流程.md
+      - Git高频基础命令: Git高频基础命令分类讲解.md
   - 开源项目:
-      - Github开源项目注意点: 开源项目需要考虑的问题.md
+      - GitHub开源项目注意点: 开源项目需要考虑的问题.md
   - 计网知识点:
       - HTTP、TCP、UDP、数据链路: 计算机网络.md
