@@ -1,7 +1,7 @@
 # Git 初始化与 GitHub 项目创建流程
 
 
-### 零、初始化一键配置
+## 零、初始化一键配置
 ```powershell
 # === Git 基础配置 ===
 git config --global user.name "你的GitHub用户名"
@@ -24,7 +24,6 @@ git pull origin main --allow-unrelated-histories   # 如果远程已有文件，
 git push -u origin main
 ```
 
----
 ## 一、安装 Git 后的基础配置
 
 首次安装 Git 必须先设置用户信息，否则无法提交。
@@ -80,7 +79,7 @@ cat ~/.ssh/id_ed25519.pub
 ssh -T git@github.com
 成功响应：Hi username! You've successfully authenticated
 ```
----
+
 ## 二、GitHub 仓库创建
 1. 登录 GitHub，点击右上角 **+** → **New repository**
 2. 填写仓库名（例如 `SRAMS`）
@@ -90,7 +89,7 @@ ssh -T git@github.com
 |------|---------|
 | **不勾选** README（推荐） | 本地 `git init` → `git add` → `git commit` → `git push`，一次成功 |
 | **勾选** README | 需要先 `git pull` 拉取远程内容，再 `git push`，否则会报错 |
----
+
 5. 本地项目推送到 GitHub
 
 - 前提：GitHub 仓库为空，无任何文件**（新建仓库不勾选 README）**
@@ -116,9 +115,10 @@ git remote -v
 origin  git@github.com:你的用户名/SRAMS.git (fetch)
 origin  git@github.com:你的用户名/SRAMS.git (push)
 ```
----
+
 ## 三、.gitignore 配置
 项目根目录创建 `.gitignore` 文件，告诉 Git 哪些文件不需要跟踪。
+
 ### 推荐模板
 ```gitignore
 # Node.js
@@ -144,5 +144,3 @@ Thumbs.db
 # Maven
 log/
 ```
-
----
