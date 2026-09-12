@@ -86,7 +86,9 @@ git push origin main
 
 推送后 Actions 自动运行部署流程，成功后网站会自动更新，不需要手动执行部署命令。
 
-#### 5. SpaceShip 购买域名，添加 DNS 解析记录，等待生效（可选）
+#### 5. SpaceShip 购买域名（可选）
+
+添加 DNS 解析记录，等待生效
 
 | 主机（全称）                                           | 类型    | 值（解析到目标 IP ）             |
 |--------------------------------------------------|-------|--------------------------|
@@ -96,47 +98,50 @@ git push origin main
 
 ### 二、新建仓库部署网站（GitHub Pages）
 
-#### 1. 上传网站到仓库 → Settings → Pages
+#### 1. 新建项目上传到仓库
 
-#### 2. 部署源选择：Deploy from a branch，选择分支+网站所在文件夹（一般`main`+`/root`）
+新建Git项目 → 项目内新建 `.github/workflows/deploy.yml` → 上传项目到仓库
 
-#### 3. 部署源选择：Github Actions，仓库内准备 `.github/workflows/deploy.yml`
+```yml
+name: Deploy MkDocs
+on:
+ push:
+   branches: [ main ]
 
-   ```yml
-   name: Deploy MkDocs
-   on:
-     push:
-       branches: [ main ]
+permissions:
+ contents: read
+ pages: write
+ id-token: write
 
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
+jobs:
+ deploy:
+   runs-on: ubuntu-latest
+   environment:
+     name: github-pages
+     url: ${{ steps.deployment.outputs.page_url }}
 
-   jobs:
-     deploy:
-       runs-on: ubuntu-latest
-       environment:
-         name: github-pages
-         url: ${{ steps.deployment.outputs.page_url }}
-
-       steps:
-         - uses: actions/checkout@v5
-         - uses: actions/setup-python@v6
-           with:
-             python-version: "3.x"
-         - run: pip install mkdocs-material
-         - run: mkdocs build
-         - uses: actions/configure-pages@v5
-         - uses: actions/upload-pages-artifact@v3
-           with:
-             path: site
-         - id: deployment
-           uses: actions/deploy-pages@v4
-
+   steps:
+     - uses: actions/checkout@v5
+     - uses: actions/setup-python@v6
+       with:
+         python-version: "3.x"
+     - run: pip install mkdocs-material
+     - run: mkdocs build
+     - uses: actions/configure-pages@v5
+     - uses: actions/upload-pages-artifact@v3
+       with:
+         path: site
+     - id: deployment
+       uses: actions/deploy-pages@v4
 ```
 
-#### 4. Custom domain 填入对应子域名，保存。成功访问后勾选 `Enforce HTTPS`，GitHub会自动申请Let’s Encrypt证书，就绪后可勾选（可选）
+#### 2. 选择部署源：Github Actions
+
+打开GitHub仓库 → Settings → Pages → Github Actions
+
+#### 3. Custom domain（可选）
+
+填入对应子域名保存，成功访问后勾选 `Enforce HTTPS`，GitHub会自动申请Let’s Encrypt证书，就绪后可勾选（可选）
 
 ### 三、GitHub Pages 部署过程出现的问题
 
@@ -154,12 +159,12 @@ Markdown 文件统一保存为 `UTF-8`，GBK 文件在 Actions 或 MkDocs 中可
 
 Pages artifact 工作流需要：
 
-  ```yaml
-  permissions:
-    contents: read
-    pages: write
-    id-token: write
-  ```
+```yaml
+permissions:
+contents: read
+pages: write
+id-token: write
+```
 
 #### 4. **裸域名只能绑定一个GitHub仓库**
 

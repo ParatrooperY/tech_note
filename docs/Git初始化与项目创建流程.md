@@ -94,22 +94,22 @@ ssh -T git@github.com
 
 ### 4. 本地项目推送到 GitHub
 
-   前提：GitHub 仓库为空，无任何文件**（新建仓库不勾选 README）**
+前提：GitHub 仓库为空，无任何文件**（新建仓库不勾选 README）**
 
-      ```powershell
-      # 1. 进入项目目录
-      cd D:\xxx
-      # 2. 初始化本地仓库
-      git init
-      # 3. 添加所有文件到暂存区
-      git add .
-      # 4. 首次提交
-      git commit -m "初始化项目文档与设计稿"
-      # 5. 添加远程仓库
-      git remote add origin git@github.com:你的用户名/SRAMS.git
-      # 6. 推送到 GitHub
-      git push -u origin main
-      ```
+```powershell
+# 1. 进入项目目录
+cd D:\xxx
+# 2. 初始化本地仓库
+git init
+# 3. 添加所有文件到暂存区
+git add .
+# 4. 首次提交
+git commit -m "初始化项目文档与设计稿"
+# 5. 添加远程仓库
+git remote add origin git@github.com:你的用户名/SRAMS.git
+# 6. 推送到 GitHub
+git push -u origin main
+```
 
 ### 5. 验证远程仓库
 
