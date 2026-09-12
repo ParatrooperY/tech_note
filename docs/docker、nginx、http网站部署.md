@@ -7,26 +7,26 @@
 **Docker把应用程序和它依赖的所有环境（Java、数据库、配置）打包成一个"标准集装箱"，到任何机器上都能原样跑。
 解决的问题：换台机器部署得重新装 Java、装 PostgreSQL、配环境变量……现在全部打包成镜像，到都能运行。
 
-| 概念 | 是什么 | 例子 |
-|---|---|---|
-| **镜像（Image）** | 只读的模板，相当于"安装包" | `postgres:15-bookworm`、`eclipse-temurin:17-jre-alpine` |
-| **容器（Container）** | 镜像跑起来的实例，相当于"正在运行的程序" | `srams-postgres-1`、`srams-server-1` |
-| **Dockerfile** | 怎么制作镜像的说明书 | 目前采用运行官方JRE镜像+挂载jar包跑后端的方案，不需要这个 |
-| **Compose.yaml** | 是容器编排配置文件，用来描述需要启动哪些服务以及运行参数 | 项目的`compose.yaml` |
-| **Volume** | 数据持久化，容器删了数据还在 | `postgres-data`、`minio-data` |
-| **网络** | 容器之间互相通信的"内网" | 通过容器名 `postgres`、`server` 互相访问 |
+| 概念                | 是什么                          | 例子                                                     |
+|-------------------|------------------------------|--------------------------------------------------------|
+| **镜像（Image）**     | 只读的模板，相当于"安装包"               | `postgres:15-bookworm`、`eclipse-temurin:17-jre-alpine` |
+| **容器（Container）** | 镜像跑起来的实例，相当于"正在运行的程序"        | `srams-postgres-1`、`srams-server-1`                    |
+| **Dockerfile**    | 怎么制作镜像的说明书                   | 目前采用运行官方JRE镜像+挂载jar包跑后端的方案，不需要这个                       |
+| **Compose.yaml**  | 是容器编排配置文件，用来描述需要启动哪些服务以及运行参数 | 项目的`compose.yaml`                                      |
+| **Volume**        | 数据持久化，容器删了数据还在               | `postgres-data`、`minio-data`                           |
+| **网络**            | 容器之间互相通信的"内网"                | 通过容器名 `postgres`、`server` 互相访问                         |
 
 ## 常用命令速查
 
-| 命令 | 干什么 |
-|---|---|
-| `docker compose up -d` | 后台启动所有服务 |
-| `docker compose ps` | 看哪些容器在跑 |
-| `docker compose logs 服务名` | 看某个容器的日志 |
-| `docker compose restart 服务名` | 重启某个服务 |
-| `docker compose down` | 停止所有容器（数据保留） |
-| `docker images` | 看有哪些镜像 |
-| `docker ps` | 看所有运行中的容器 |
+| 命令                           | 干什么          |
+|------------------------------|--------------|
+| `docker compose up -d`       | 后台启动所有服务     |
+| `docker compose ps`          | 看哪些容器在跑      |
+| `docker compose logs 服务名`    | 看某个容器的日志     |
+| `docker compose restart 服务名` | 重启某个服务       |
+| `docker compose down`        | 停止所有容器（数据保留） |
+| `docker images`              | 看有哪些镜像       |
+| `docker ps`                  | 看所有运行中的容器    |
 
 ### Docker容器间的通信
 
@@ -43,7 +43,8 @@ ports:
 
 ### Docker的端口映射
 
-以 PostgreSQL 为例，docker 的数据库容器端口映射配置为 5432:5432**（全称：0.0.0.0:5432:5432）**，左边是本机端口可以随意指定，右边是容器内 PostgreSQL 默认的监听端口不可修改。
+以 PostgreSQL 为例，docker 的数据库容器端口映射配置为 5432:5432**（全称：0.0.0.0:5432:5432）**，左边是本机端口可以随意指定，右边是容器内
+PostgreSQL 默认的监听端口不可修改。
 
 当做了端口映射，本机程序或外部程序访问本机的 5432 端口时， docker 会把流量转发到容器里 PostgreSQL 监听的 5432 端口。
 
@@ -51,7 +52,8 @@ ports:
 
 docker 做端口映射（`5432:5432`）时，它会**自动在系统防火墙（iptables）里加一条规则**，把这个端口放行。
 
-如果**云服务器安全组中开放了 5432 端口**，端口会通过公网 IP 会给全世界访问，互联网上跑着大量自动化扫描器，如果 docker 中数据库配置写成 5432:5432 ，就可能被别人使用弱密码字典爆破（admin/123456/postgres等），导致泄露数据。
+如果**云服务器安全组中开放了 5432 端口**，端口会通过公网 IP 会给全世界访问，互联网上跑着大量自动化扫描器，如果 docker
+中数据库配置写成 5432:5432 ，就可能被别人使用弱密码字典爆破（admin/123456/postgres等），导致泄露数据。
 
 因此服务器运行的docker容器端口映射只能使用只绑定本机回环地址：
 
@@ -64,7 +66,8 @@ ports:
 
 ### Compose.yaml 服务之间通信
 
-同一个 compose.yaml 项目中的服务会自动加入同一个网络，并且可以通过服务名互相访问，不需要为内部通信配置端口映射。例如 Spring Boot 连接名为 `postgres` 的数据库服务：
+同一个 compose.yaml 项目中的服务会自动加入同一个网络，并且可以通过服务名互相访问，不需要为内部通信配置端口映射。例如 Spring
+Boot 连接名为 `postgres` 的数据库服务：
 
 ```text
 jdbc:postgresql://postgres:5432/srams
@@ -115,7 +118,7 @@ location /api/ {
 }
 ```
 
- `/api/login` 会去掉匹配到的 `/api/`，转发为`http://127.0.0.1:8080/login`，后端接收`/login`。。
+`/api/login` 会去掉匹配到的 `/api/`，转发为`http://127.0.0.1:8080/login`，后端接收`/login`。。
 
 `location /` 和 `location /api/` 的区别：网络请求 `/api/login` 匹配时优先匹配最合适的前缀（ `/api/ > /` ）
 
@@ -123,17 +126,17 @@ location /api/ {
 
 ## 5. 常见 HTTP 状态码
 
-| 状态码 | 含义 |
-| --- | --- |
-| 200 | 请求成功 |
-| 301 | 永久重定向（旧地址永久搬到新地址） |
-| 302 | 临时重定向 |
-| 304 Not Modified | 缓存还没过期，用本地的就行 |
-| 400 Bad Request | 请求格式不对后端校验参数失败 |
-| 401 Unauthorized | 没登录或登录过期，没带 token 就访问 |
-| 403 Forbidden | 已认证但没有权限访问这个接口 |
-| 404 Not Found | 找不到页面或接口 |
-| 500 Internal Server Error | 后端程序发生错误 |
-| 502 Bad Gateway | Nginx 反代不到后端，后端容器挂了，Nginx 收到请求但转不过去 |
-| 504 Gateway Timeout | 后端响应太慢后端处理超时 |
+| 状态码                       | 含义                                  |
+|---------------------------|-------------------------------------|
+| 200                       | 请求成功                                |
+| 301                       | 永久重定向（旧地址永久搬到新地址）                   |
+| 302                       | 临时重定向                               |
+| 304 Not Modified          | 缓存还没过期，用本地的就行                       |
+| 400 Bad Request           | 请求格式不对后端校验参数失败                      |
+| 401 Unauthorized          | 没登录或登录过期，没带 token 就访问               |
+| 403 Forbidden             | 已认证但没有权限访问这个接口                      |
+| 404 Not Found             | 找不到页面或接口                            |
+| 500 Internal Server Error | 后端程序发生错误                            |
+| 502 Bad Gateway           | Nginx 反代不到后端，后端容器挂了，Nginx 收到请求但转不过去 |
+| 504 Gateway Timeout       | 后端响应太慢后端处理超时                        |
 

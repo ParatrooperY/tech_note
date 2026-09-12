@@ -2,7 +2,7 @@
 
 ## 部署步骤
 
-### 1. 新建GitHub仓库，上传本地项目
+### 一、新建GitHub仓库，上传本地项目
 
 ```text
 本地项目
@@ -13,9 +13,9 @@
 → 得到网站地址
 ```
 
-以个人网站为例：
+#### 1. 准备项目结构
 
-1. 准备项目结构，网站入口通常是根目录的 `index.html`
+网站入口通常是根目录的 `index.html`
 
 ```text
 portfolio/
@@ -28,7 +28,9 @@ portfolio/
       └─ deploy.yml
 ```
 
-2. 初始化并推送到 GitHub（如果远程仓库已经连接，就不需要 `git init` 或 `git remote add origin`）
+#### 2. 初始化并推送到 GitHub
+
+如果远程仓库已经连接，就不需要 `git init` 或 `git remote add origin`
 
 ```powershell
 cd "D:\portfolio"
@@ -40,7 +42,7 @@ git remote add origin https://github.com/用户名/仓库名.git
 git push -u origin main
 ```
 
-3. 部署源选择：GitHub Actions
+#### 3. 选择部署源
 
 Pages 设置：
 
@@ -74,7 +76,7 @@ actions/upload-pages-artifact
 actions/deploy-pages
 ```
 
-4. 以后更新网站：
+#### 4. 以后更新网站：
 
 ```powershell
 git add .
@@ -84,40 +86,40 @@ git push origin main
 
 推送后 Actions 自动运行部署流程，成功后网站会自动更新，不需要手动执行部署命令。
 
-5. SpaceShip 购买域名，添加 DNS 解析记录，等待生效（可选）
+#### 5. SpaceShip 购买域名，添加 DNS 解析记录，等待生效（可选）
 
-| 主机（全称）                                           | 类型  | 值（解析到目标 IP ）     |
-| ------------------------------------------------------ | ----- | ------------------------ |
-| `@`（裸域名 `.paratroopery.space`）                    | CNAME | `paratroopery.github.io` |
+| 主机（全称）                                           | 类型    | 值（解析到目标 IP ）             |
+|--------------------------------------------------|-------|--------------------------|
+| `@`（裸域名 `.paratroopery.space`）                   | CNAME | `paratroopery.github.io` |
 | `portfolio`（二级域名 `portfolio.paratroopery.space`） | CNAME | `paratroopery.github.io` |
 | `note`（二级域名 `note.paratroopery.space`）           | CNAME | `paratroopery.github.io` |
 
-### 2. 新建仓库部署网站（GitHub Pages）
+### 二、新建仓库部署网站（GitHub Pages）
 
-1. 上传网站到仓库 → Settings → Pages
+#### 1. 上传网站到仓库 → Settings → Pages
 
-2. 部署源选择：Deploy from a branch，选择分支+网站所在文件夹（一般`main`+`/root`）
+#### 2. 部署源选择：Deploy from a branch，选择分支+网站所在文件夹（一般`main`+`/root`）
 
-3. 部署源选择：Github Actions，仓库内准备 `.github/workflows/deploy.yml`
+#### 3. 部署源选择：Github Actions，仓库内准备 `.github/workflows/deploy.yml`
 
    ```yml
    name: Deploy MkDocs
    on:
      push:
-       branches: [main]
-   
+       branches: [ main ]
+
    permissions:
      contents: read
      pages: write
      id-token: write
-   
+
    jobs:
      deploy:
        runs-on: ubuntu-latest
        environment:
          name: github-pages
          url: ${{ steps.deployment.outputs.page_url }}
-   
+
        steps:
          - uses: actions/checkout@v5
          - uses: actions/setup-python@v6
@@ -131,27 +133,27 @@ git push origin main
              path: site
          - id: deployment
            uses: actions/deploy-pages@v4
-   
-   ```
 
-4. Custom domain 填入对应子域名，保存。成功访问后勾选 `Enforce HTTPS`，GitHub会自动申请Let’s Encrypt证书，就绪后可勾选（可选）
+```
 
-### 3. GitHub Pages 部署过程出现的问题
+#### 4. Custom domain 填入对应子域名，保存。成功访问后勾选 `Enforce HTTPS`，GitHub会自动申请Let’s Encrypt证书，就绪后可勾选（可选）
 
-- **配置文件位置错误**
+### 三、GitHub Pages 部署过程出现的问题
 
-  MkDocs 工作流执行 `mkdocs build` 时，默认在仓库根目录寻找 `mkdocs.yml`
+#### 1. **配置文件位置错误**
 
-  如果文件被删除或放进了子目录，就会出现： `Error: Config file 'mkdocs.yml' does not exist.`
+MkDocs 工作流执行 `mkdocs build` 时，默认在仓库根目录寻找 `mkdocs.yml`
 
-- **中文文件编码不是 UTF-8**
-  
-  Markdown 文件统一保存为 `UTF-8`，GBK 文件在 Actions 或 MkDocs 中可能报：`'utf-8' codec can't decode byte ...`
+如果文件被删除或放进了子目录，就会出现： `Error: Config file 'mkdocs.yml' does not exist.`
 
-- **Actions 权限不足**
-  
-  Pages artifact 工作流需要：
-  
+#### 2. **中文文件编码不是 UTF-8**
+
+Markdown 文件统一保存为 `UTF-8`，GBK 文件在 Actions 或 MkDocs 中可能报：`'utf-8' codec can't decode byte ...`
+
+#### 3. **Actions 权限不足**
+
+Pages artifact 工作流需要：
+
   ```yaml
   permissions:
     contents: read
@@ -159,6 +161,6 @@ git push origin main
     id-token: write
   ```
 
-- **裸域名只能绑定一个GitHub仓库**
+#### 4. **裸域名只能绑定一个GitHub仓库**
 
-  多站点必须用子域名隔离，每个子域名单独在对应GitHub仓库配置**Custom Domain**
+多站点必须用子域名隔离，每个子域名单独在对应GitHub仓库配置**Custom Domain**
