@@ -28,6 +28,15 @@ portfolio/
       └─ deploy.yml
 ```
 
+当前个人网站的 `deploy.yml` 使用的是：
+
+```yaml
+actions/checkout                  # 拉取仓库代码到GitHub虚拟机
+actions/configure-pages           # 自动设置 Pages 构建环境、生成页面部署元信息
+actions/upload-pages-artifact     # 把构建好的静态文件（html/css/js）打包上传成 GitHub 的 artifact
+actions/deploy-pages              # 读取上面上传的 artifact，正式发布到 GitHub Pages，触发页面上线
+```
+
 #### 2. 初始化并推送到 GitHub
 
 如果远程仓库已经连接，就不需要 `git init` 或 `git remote add origin`
@@ -50,33 +59,17 @@ Pages 设置：
 Settings → Pages → Source → GitHub Actions
 ```
 
-GitHub 虚拟机部署流程是：
+部署流程是：
 
 ```text
-main
-→ Actions 读取项目文件
-→ 上传网站构建产物
-→ GitHub Pages 发布
+本地推送项目更新
+→ Actions 自动启动拉取项目文件
+→ 传入 GitHub 虚拟机构建网站
+→ 网站在 GitHub Pages 自动发布
 ```
 
-以后更新网站：
 
-```powershell
-git add .
-git commit -m "更新网站"
-git push origin main
-```
-
-当前个人网站的 `deploy.yml` 使用的是：
-
-```yaml
-actions/checkout
-actions/configure-pages
-actions/upload-pages-artifact
-actions/deploy-pages
-```
-
-#### 4. 以后更新网站：
+以后更新网站只需要在本地：
 
 ```powershell
 git add .
@@ -86,7 +79,7 @@ git push origin main
 
 推送后 Actions 自动运行部署流程，成功后网站会自动更新，不需要手动执行部署命令。
 
-#### 5. SpaceShip 购买域名（可选）
+#### 4. SpaceShip 购买域名（可选）
 
 添加 DNS 解析记录，等待生效
 
